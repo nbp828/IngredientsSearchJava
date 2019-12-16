@@ -1,7 +1,7 @@
 ExternalSource/
 .DS_Store
 LuceneInput/
-LuceneOutput/
+LuceneIndex/
 Logs/
 
 # User-specific stuff

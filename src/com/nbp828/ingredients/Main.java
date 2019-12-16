@@ -2,6 +2,8 @@ package com.nbp828.ingredients;
 
 import com.nbp828.Common.FoodItem;
 import com.nbp828.LuceneWrapper.LuceneDataDirectoryBuilder;
+import com.nbp828.LuceneWrapper.LuceneIndexer;
+import com.nbp828.LuceneWrapper.LuceneSearcher;
 import com.nbp828.mongoDBWrapper.IngredientsMongoClient;
 import com.nbp828.mongoDBWrapper.QueryBuilder;
 import org.bson.conversions.Bson;
@@ -16,12 +18,30 @@ public class Main {
         //printFoodItem("3493832070384");
         //printFoodItem("0000000043595");
         //printFoodItem("0000010206515");
-        abc();
+        //createLuceneIndexDirectory();
+
+        // Dave's healthy query
+        searchLucene("CRACKED WHOLE WHEAT water, POWERSEED MIX, wheat-gluten, gluten, fruit-juice, fruit," +
+                " OAT FIBER SEA SALT, CULTURED WHOLE WHEAT, yeast, vinegar, whole-wheat, cereal, wheat");
+
+        // Sig Kit unhealthy query
+        searchLucene("wheat-flour, cereal, wheat, flour, cereal-flour, water, wheat-gluten," +
+                " gluten, high-fructose-corn-syrup, glucose, fructose, corn-syrup," +
+                " glucose-fructose-syrup, soya-bean, soya");
 
     }
 
-    private static void abc(){
+    private static void searchLucene(String query){
+        String indexPath = "LuceneIndex";
+        LuceneSearcher searcher = new LuceneSearcher();
+        searcher.Search(indexPath, query);
+    }
 
+    private static void createLuceneIndexDirectory(){
+        String indexPath = "LuceneIndex";
+        String docPath = "LuceneInput";
+        LuceneIndexer indexer = new LuceneIndexer();
+        indexer.createIndex(indexPath, docPath);
     }
 
     private static void printFoodItem(String code){
