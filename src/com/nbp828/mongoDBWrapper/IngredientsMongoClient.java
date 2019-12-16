@@ -22,11 +22,11 @@ import org.bson.conversions.Bson;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IngredientsDocumentClient {
+public class IngredientsMongoClient {
 
     MongoClient mongoClient;
 
-    public IngredientsDocumentClient()
+    public IngredientsMongoClient()
     {
         this.mongoClient = new MongoClient();
     }
@@ -35,6 +35,9 @@ public class IngredientsDocumentClient {
     {
         MongoDatabase database = mongoClient.getDatabase("off");
         MongoCollection<Document> collection = database.getCollection("product");
+
+        Bson b = gt("_i", 1);
+        collection.find(b);
         return collection.find(query);
     }
 }
