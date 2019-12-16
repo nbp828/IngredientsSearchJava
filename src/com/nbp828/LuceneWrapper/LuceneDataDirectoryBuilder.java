@@ -21,13 +21,15 @@ public class LuceneDataDirectoryBuilder {
     }
 
     public void buildDirectory(String luceneInputDirectoryPath) throws IOException {
-        // Bson query = QueryBuilder.getAllValidItemsQuery();
-        Bson query = QueryBuilder.getOneFoodItemQuery("0013764027282");
+        Bson query = QueryBuilder.getAllValidItemsQuery();
+        // Bson query = QueryBuilder.getOneFoodItemQuery("0013764027282");
         ArrayList<FoodItem> items = mongoClient.getFoodItems(query);
-        FoodItem item = items.get(0);
-
-        String data = item.getIngredients().toString();
-        var path = Paths.get(luceneInputDirectoryPath, item.getCode());
-        Files.write(path, data.getBytes(), StandardOpenOption.CREATE);
+        System.out.println("Writing to Lucene Input Directory...");
+        for (FoodItem item : items)
+        {
+            String data = item.getIngredients().toString();
+            var path = Paths.get(luceneInputDirectoryPath, item.getCode());
+            Files.write(path, data.getBytes(), StandardOpenOption.CREATE);
+        }
     }
 }

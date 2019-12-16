@@ -36,11 +36,15 @@ public class IngredientsMongoClient {
     {
         MongoDatabase database = mongoClient.getDatabase("off");
         MongoCollection<Document> collection = database.getCollection("products");
+        System.out.println("Starting a query...");
         FindIterable<Document> documents = collection.find(query);
         ArrayList<FoodItem> retItems = new ArrayList<>();
+        System.out.println("Starting to convert documents...");
         for (Document document : documents){
             FoodItem f = DocumentToFoodItemConverter.Convert(document);
-            retItems.add(f);
+            if (f != null) {
+                retItems.add(f);
+            }
         }
 
         return retItems;
