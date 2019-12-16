@@ -4,6 +4,7 @@ import com.nbp828.Common.FoodItem;
 import com.nbp828.Common.IngredientsCleaner;
 import org.bson.Document;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -47,6 +48,13 @@ public class DocumentToFoodItemConverter {
                 ingredients = (ArrayList<String>)document.get("ingredients_hierarchy");
             }
 
+            // Do not create non-english
+            for (String ingredient : ingredients) {
+                if (!isPureAscii(ingredient)) {
+                    return null;
+                }
+            }
+
             ingredients = IngredientsCleaner.getCleanIngredients(ingredients);
 
             // check of 0
@@ -58,7 +66,7 @@ public class DocumentToFoodItemConverter {
                 return null;
             }
 
-            // TODO: Clean ingredients
+            // TODO: Clean categories
 
             return new FoodItem(code, name, score, categories, ingredients);
         }
@@ -69,5 +77,9 @@ public class DocumentToFoodItemConverter {
         }
 
         return null;
+    }
+
+    public static boolean isPureAscii(String v) {
+        return Charset.forName("US-ASCII").newEncoder().canEncode(v);
     }
 }

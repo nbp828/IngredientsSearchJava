@@ -24,7 +24,7 @@ public class LuceneDataDirectoryBuilder {
     public void buildDirectory(String luceneInputDirectoryPath) throws IOException {
         Bson query = QueryBuilder.getAllValidItemsQuery();
         // Bson query = QueryBuilder.getOneFoodItemQuery("0013764027282");
-        ArrayList<FoodItem> items = mongoClient.getFoodItems(query);
+        ArrayList<FoodItem> items = mongoClient.getFoodItems(query, true);
         System.out.println("Writing to Lucene Input Directory...");
 
         // Check if directory exist
@@ -34,7 +34,7 @@ public class LuceneDataDirectoryBuilder {
 
         for (FoodItem item : items)
         {
-            String data = item.getIngredients().toString();
+            String data = item.getIngredientsString();
             Path path = Paths.get(luceneInputDirectoryPath, item.getCode());
             Files.deleteIfExists(path);
             Files.write(path, data.getBytes(), StandardOpenOption.CREATE);
