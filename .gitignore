@@ -1,5 +1,7 @@
 ExternalSource/
 .DS_Store
+LuceneInput/
+LuceneOutput/
 
 # User-specific stuff
 .idea/**/workspace.xml

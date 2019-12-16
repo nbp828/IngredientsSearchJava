@@ -8,6 +8,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.MongoCollection;
 
+import com.nbp828.Common.FoodItem;
 import org.bson.Document;
 import java.util.Arrays;
 import com.mongodb.Block;
@@ -28,16 +29,20 @@ public class IngredientsMongoClient {
 
     public IngredientsMongoClient()
     {
-        this.mongoClient = new MongoClient();
+        this.mongoClient = new MongoClient("localhost", 27017);
     }
 
-    public FindIterable<Document> getDocuments(Bson query)
+    public ArrayList<FoodItem> getFoodItems(Bson query)
     {
         MongoDatabase database = mongoClient.getDatabase("off");
-        MongoCollection<Document> collection = database.getCollection("product");
+        MongoCollection<Document> collection = database.getCollection("products");
+        FindIterable<Document> documents = collection.find(query);
+        ArrayList<FoodItem> retItems = new ArrayList<>();
+        for (Document document : documents){
+            FoodItem f = DocumentToFoodItemConverter.Convert(document);
+            retItems.add(f);
+        }
 
-        Bson b = gt("_i", 1);
-        collection.find(b);
-        return collection.find(query);
+        return retItems;
     }
 }

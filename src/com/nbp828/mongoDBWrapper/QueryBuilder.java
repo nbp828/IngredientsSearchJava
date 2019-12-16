@@ -19,18 +19,20 @@ public class QueryBuilder {
         Bson productQuery = or(orQueries);
 
         // score
-        Bson gradeQuery = exists("nutriscore_grade");
-        Bson nutritionScoreQuery = exists("nutriscore_score");
-        orQueries = new ArrayList<>();
-        orQueries.add(gradeQuery);
-        orQueries.add(nutritionScoreQuery);
-        Bson scoreQuery = or(orQueries);
+//        Bson gradeQuery = exists("nutriscore_grade");
+//        Bson nutritionScoreQuery = exists("nutriscore_score");
+//        orQueries = new ArrayList<>();
+//        orQueries.add(gradeQuery);
+//        orQueries.add(nutritionScoreQuery);
+//        Bson scoreQuery = or(orQueries);
+
+        Bson scoreQuery = exists("nutriscore_score");
 
         // code
         Bson codeQuery = exists("code");
 
         // categories
-        Bson categoriesQuery = exists("categories");
+        Bson categoriesQuery = exists("categories_hierarchy");
 
         // ingredients
         Bson ingredientsQuery = exists("ingredients_hierarchy");
