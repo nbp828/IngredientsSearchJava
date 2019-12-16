@@ -108,7 +108,7 @@ public class IngredientsMongoClient {
 
         String data = sb.toString();
         LocalDateTime time = LocalDateTime.now();
-        String filename = "Analysis" + time.getHour() + "-" + time.getMinute() + ".log";
+        String filename = "Analysis" + time.getHour() + "-" + time.getMinute() + "-" + time.getSecond() + ".log";
         Path path = Paths.get("Logs", filename);
         Files.deleteIfExists(path);
         Files.write(path, data.getBytes(), StandardOpenOption.CREATE);
