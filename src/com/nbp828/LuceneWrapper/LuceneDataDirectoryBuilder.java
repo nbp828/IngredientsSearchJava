@@ -7,6 +7,7 @@ import org.bson.conversions.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -25,10 +26,17 @@ public class LuceneDataDirectoryBuilder {
         // Bson query = QueryBuilder.getOneFoodItemQuery("0013764027282");
         ArrayList<FoodItem> items = mongoClient.getFoodItems(query);
         System.out.println("Writing to Lucene Input Directory...");
+
+        // Check if directory exist
+        if (!Files.exists(Paths.get(luceneInputDirectoryPath))) {
+            Files.createDirectory(Paths.get(luceneInputDirectoryPath));
+        }
+
         for (FoodItem item : items)
         {
             String data = item.getIngredients().toString();
-            var path = Paths.get(luceneInputDirectoryPath, item.getCode());
+            Path path = Paths.get(luceneInputDirectoryPath, item.getCode());
+            Files.deleteIfExists(path);
             Files.write(path, data.getBytes(), StandardOpenOption.CREATE);
         }
     }

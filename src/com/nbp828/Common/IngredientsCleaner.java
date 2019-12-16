@@ -10,7 +10,11 @@ public class IngredientsCleaner {
         // remove en or fr
         for (String ingredient : ingredients){
             String retIngredient = ingredient.stripLeading();
-            if (retIngredient.startsWith("en:") || retIngredient.startsWith("fr:")){
+            if (retIngredient.length() < 3) {
+                continue;
+            }
+            else if (retIngredient.charAt(2) == ':')
+            {
                 retIngredient = retIngredient.substring(3);
             }
 
@@ -26,8 +30,19 @@ public class IngredientsCleaner {
                 else if (c >= '0' && c <= '9') {
                     sb.append(c);
                 }
-                else if (c == ' '){
-                    sb.append(c);
+                else if (c == ' '
+                        || c == '-'
+                        || c == '_'
+                        || c == ','
+                        || c == ';'
+                        || c == '('
+                        || c == ')'
+                        || c == '{'
+                        || c == '}'
+                        || c == '.'
+                        || c == '!'
+                        || c == '*'){
+                    sb.append(' ');
                 }
             }
 
