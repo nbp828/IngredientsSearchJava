@@ -1,11 +1,10 @@
 package com.nbp828.mongoDBWrapper;
 
 import com.nbp828.Common.FoodItem;
+import com.nbp828.Common.IngredientsCleaner;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class DocumentToFoodItemConverter {
@@ -17,8 +16,8 @@ public class DocumentToFoodItemConverter {
             String code = null;
             String name = null;
             Integer score = null;
-            List<String> categories = null;
-            List<String> ingredients = null;
+            ArrayList<String> categories = null;
+            ArrayList<String> ingredients = null;
 
             // code
             if (keys.contains("code")){
@@ -47,6 +46,8 @@ public class DocumentToFoodItemConverter {
             if (keys.contains("ingredients_hierarchy")){
                 ingredients = (ArrayList<String>)document.get("ingredients_hierarchy");
             }
+
+            ingredients = IngredientsCleaner.getCleanIngredients(ingredients);
 
             // check of 0
             if (categories.size() == 0){
