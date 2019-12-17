@@ -17,18 +17,13 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        // createLuceneInputDirectory();
-        //printFoodItem("3493832070384");
-        //printFoodItem("0000000043595");
-        //printFoodItem("0000010206515");
-        //createLuceneIndexDirectory();
-
-        // Score Queries
         IngredientsMongoClient mongoClient = new IngredientsMongoClient();
 
-        // runAnalysis(mongoClient);
+        //createLuceneInputDirectory();
+        //createLuceneIndexDirectory();
         searchTest(mongoClient);
-
+        // runAnalysis(mongoClient);
+        // printFoodItem("3493832070384");
     }
 
     private static void searchTest(IngredientsMongoClient mongoClient)
