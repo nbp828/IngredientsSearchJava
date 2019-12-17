@@ -18,6 +18,11 @@ public class ScoringAlgorithm {
 
     public float score(ArrayList<LuceneResult> luceneResults)
     {
+        System.out.println("results: " + luceneResults.size());
+        if (luceneResults.size() == 0){
+            return Float.NEGATIVE_INFINITY;
+        }
+
         float retValue = 0.0f;
         float normalizer = 0.0f;
         for (LuceneResult luceneResult : luceneResults){

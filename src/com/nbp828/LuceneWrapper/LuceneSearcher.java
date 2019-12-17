@@ -22,7 +22,7 @@ import java.util.*;
 
 public class LuceneSearcher {
 
-    public ArrayList<LuceneResult> Search(String indexPath, String queryString)
+    public ArrayList<LuceneResult> Search(String indexPath, String queryString, int limit)
             throws Exception
     {
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(indexPath)));
@@ -40,15 +40,15 @@ public class LuceneSearcher {
         Query query = parser.parse(queryString);
         System.out.println("Searching for: " + query.toString(field));
 
-        ArrayList<LuceneResult> results = this.doPagingSearch(searcher, query, 10);
+        ArrayList<LuceneResult> results = this.doPagingSearch(searcher, query, limit);
         return results;
     }
 
-    private ArrayList<LuceneResult> doPagingSearch(IndexSearcher searcher, Query query, int hitsPerPage)
+    private ArrayList<LuceneResult> doPagingSearch(IndexSearcher searcher, Query query, int limit)
             throws IOException
     {
         ArrayList<LuceneResult> luceneResults = new ArrayList<>();
-        TopDocs results = searcher.search(query, hitsPerPage);
+        TopDocs results = searcher.search(query, limit);
         ScoreDoc[] hits = results.scoreDocs;
         for (ScoreDoc hit : hits) {
             Document doc = searcher.doc(hit.doc);

@@ -1,6 +1,7 @@
 package com.nbp828.IngredientsApp;
 
 import com.nbp828.Common.FoodItem;
+import com.nbp828.Common.IngredientsCleaner;
 import com.nbp828.IngredientsScorer.ScoringAlgorithm;
 import com.nbp828.LuceneWrapper.LuceneDataDirectoryBuilder;
 import com.nbp828.LuceneWrapper.LuceneIndexer;
@@ -25,26 +26,72 @@ public class Main {
         IngredientsMongoClient mongoClient = new IngredientsMongoClient();
 
 
-        // Dave's healthy query
-        searchLuceneAndScore(mongoClient, "CRACKED WHOLE WHEAT water, POWERSEED MIX, wheat-gluten, gluten, " +
-                "fruit-juice, fruit, OAT FIBER SEA SALT, CULTURED WHOLE WHEAT, yeast, vinegar, whole-wheat, cereal, " +
-                "wheat");
+        String s1 = "en:ingredient, en:CRACKED WHOLE WHEAT, en:water, en:POWERSEED MIX, en:wheat-gluten, en:gluten, " +
+                "en:fruit-juice, en:fruit, en:OAT FIBER SEA SALT, en:CULTURED WHOLE WHEAT, en:yeast, en:vinegar, " +
+                "en:whole-wheat, en:cereal, en:wheat";
+        String s2 = "en:wheat-flour, en:cereal, en:wheat, en:flour, en:cereal-flour, en:water, en:wheat-gluten, " +
+                "en:gluten, en:high-fructose-corn-syrup, en:glucose, en:fructose, en:corn-syrup, " +
+                "en:glucose-fructose-syrup, en:soya-bean, en:soya";
+        String s3 = "en:WHOLE WHEAT FLOUR, en:filtered-water, en:water, en:sugar, en:salt, en:yeast, en:e282";
+        String s4 = "en:Unbromated unbleached enriched _wheat_ flour, en:water, en:oat, en:cereal, " +
+                "en:high-fructose-corn-syrup, en:glucose, en:fructose, en:corn-syrup, en:glucose-fructose-syrup, " +
+                "en:yeast, en:soya-oil, en:oil, en:vegetable-oil-and-fat, en:vegetable-oil, en:contains 2% and less of";
+        String s5 = "en:Sprouted Wheat, en:Sprouted Barley, en:Sprouted Millet, en:malted-barley, en:cereal, en:malt," +
+                " en:Sprouted Lentils, en:Sprouted Soybeans, en:Sprouted Spelt, en:filtered-water, en:water, " +
+                "en:fresh-yeast, en:yeast, en:baker-s-yeast, en:wheat-gluten";
 
-        // Sig Kit unhealthy query
-        searchLuceneAndScore(mongoClient,"wheat-flour, cereal, wheat, flour, cereal-flour, water, " +
-                "wheat-gluten, glucose-fructose-syrup, soya-bean, soya");
+
+        searchLuceneAndScore(mongoClient, s1);
+        searchLuceneAndScore(mongoClient, s2);
+        searchLuceneAndScore(mongoClient, s3);
+        searchLuceneAndScore(mongoClient, s4);
+        searchLuceneAndScore(mongoClient, s5);
+
+        String m1 = "Organic avocado puree (water, organic avocado), nonorganic avocado oil, organic cane sugar, " +
+                "organic tapioca starch, organic cocoa powder, organic vanilla extract, sea salt, " +
+                "organic guar gum, organic gun acacia";
+        String m2 = "avocado puree,  avocado oil,  cane sugar, " +
+                " tapioca starch,  cocoa powder,  vanilla extract, sea salt, " +
+                " guar gum,  gun acacia";
+
+        String m3 = "Milk, sugar, cream, chocolate, dextrose, milk fat, cocoa butter, carob gum, vanilla extract, " +
+                "natural flavor, chocolate (processed with alkali), soy lecithin, mint leaf extractives.";
+
+        searchLuceneAndScore(mongoClient, m1);
+        searchLuceneAndScore(mongoClient, m2);
+        searchLuceneAndScore(mongoClient, m3);
+
+//        // Dave's healthy query
+//        searchLuceneAndScore(mongoClient, "CRACKED WHOLE WHEAT water, POWERSEED MIX, wheat-gluten, gluten, " +
+//                "fruit-juice, fruit, OAT FIBER SEA SALT, CULTURED WHOLE WHEAT, yeast, vinegar, whole-wheat, cereal, " +
+//                "wheat");
+//
+//        // Sig Kit unhealthy query
+//        searchLuceneAndScore(mongoClient,"wheat-flour, cereal, wheat, flour, cereal-flour, water, " +
+//                "wheat-gluten, glucose-fructose-syrup, soya-bean, soya");
 
     }
 
     private static void searchLuceneAndScore(IngredientsMongoClient mongoClient, String query){
 
+        ArrayList<String> queryList = new ArrayList<>();
+        queryList.add(query);
+        query = IngredientsCleaner.getCleanIngredients(queryList).get(0);
+
         String indexPath = "LuceneIndex";
         LuceneSearcher searcher = new LuceneSearcher();
         ScoringAlgorithm scoringAlgorithm = new ScoringAlgorithm(mongoClient);
         try{
-            ArrayList<LuceneResult> results = searcher.Search(indexPath, query);
-            float score = scoringAlgorithm.score(results);
-            System.out.println(score);
+            ArrayList<LuceneResult> results = searcher.Search(indexPath, query, 20);
+            if (results.size() > 0) {
+                float score = scoringAlgorithm.score(results);
+                System.out.println(score);
+            }
+            else
+            {
+                System.out.println("-1 Result not found");
+            }
+
         }
         catch(Exception e)
         {
