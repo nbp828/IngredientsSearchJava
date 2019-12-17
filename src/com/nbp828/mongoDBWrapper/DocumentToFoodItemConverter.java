@@ -55,7 +55,8 @@ public class DocumentToFoodItemConverter {
                 }
             }
 
-            ingredients = IngredientsCleaner.getCleanIngredients(ingredients);
+            IngredientsCleaner ingredientsCleaner = new IngredientsCleaner();
+            ingredients = ingredientsCleaner.getCleanIngredients(ingredients);
 
             // check of 0
             if (categories.size() == 0){

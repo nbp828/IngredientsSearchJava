@@ -12,6 +12,7 @@ import com.nbp828.mongoDBWrapper.QueryBuilder;
 import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
@@ -25,7 +26,13 @@ public class Main {
         // Score Queries
         IngredientsMongoClient mongoClient = new IngredientsMongoClient();
 
+        // runAnalysis(mongoClient);
+        searchTest(mongoClient);
 
+    }
+
+    private static void searchTest(IngredientsMongoClient mongoClient)
+    {
         String s1 = "en:ingredient, en:CRACKED WHOLE WHEAT, en:water, en:POWERSEED MIX, en:wheat-gluten, en:gluten, " +
                 "en:fruit-juice, en:fruit, en:OAT FIBER SEA SALT, en:CULTURED WHOLE WHEAT, en:yeast, en:vinegar, " +
                 "en:whole-wheat, en:cereal, en:wheat";
@@ -57,9 +64,22 @@ public class Main {
         String m3 = "Milk, sugar, cream, chocolate, dextrose, milk fat, cocoa butter, carob gum, vanilla extract, " +
                 "natural flavor, chocolate (processed with alkali), soy lecithin, mint leaf extractives.";
 
+        String m4 = "Sugar, cocoa butter, milk, chocolate, skim milk, soya lecithin (emulsifier), " +
+                "barley malt powder, artificial flavor";
+
+        String m5 = "potato";
+
+        String m6 = "avocado";
+
+        String m7 = "sugar";
+
         searchLuceneAndScore(mongoClient, m1);
         searchLuceneAndScore(mongoClient, m2);
         searchLuceneAndScore(mongoClient, m3);
+        searchLuceneAndScore(mongoClient, m4);
+        searchLuceneAndScore(mongoClient, m5);
+        searchLuceneAndScore(mongoClient, m6);
+        searchLuceneAndScore(mongoClient, m7);
 
 //        // Dave's healthy query
 //        searchLuceneAndScore(mongoClient, "CRACKED WHOLE WHEAT water, POWERSEED MIX, wheat-gluten, gluten, " +
@@ -69,14 +89,14 @@ public class Main {
 //        // Sig Kit unhealthy query
 //        searchLuceneAndScore(mongoClient,"wheat-flour, cereal, wheat, flour, cereal-flour, water, " +
 //                "wheat-gluten, glucose-fructose-syrup, soya-bean, soya");
-
     }
 
     private static void searchLuceneAndScore(IngredientsMongoClient mongoClient, String query){
 
-        ArrayList<String> queryList = new ArrayList<>();
-        queryList.add(query);
-        query = IngredientsCleaner.getCleanIngredients(queryList).get(0);
+        String[] queryArr = query.split(",");
+        ArrayList<String> queryList = new ArrayList<String>(Arrays.asList(queryArr));
+        IngredientsCleaner ingredientsCleaner = new IngredientsCleaner();
+        query = ingredientsCleaner.getQuery(queryList);
 
         String indexPath = "LuceneIndex";
         LuceneSearcher searcher = new LuceneSearcher();
@@ -98,7 +118,6 @@ public class Main {
             System.out.println(e.toString());
         }
     }
-
 
     private static void createLuceneIndexDirectory(){
         String indexPath = "LuceneIndex";
@@ -129,5 +148,12 @@ public class Main {
         {
             System.out.println(e.toString());
         }
+    }
+
+    private static void runAnalysis(IngredientsMongoClient mongoClient)
+    {
+
+        Bson query = QueryBuilder.getAllValidItemsQuery();
+        mongoClient.getFoodItems(query, true);
     }
 }
