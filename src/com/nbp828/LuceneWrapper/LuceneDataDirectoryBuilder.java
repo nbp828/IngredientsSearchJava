@@ -35,7 +35,8 @@ public class LuceneDataDirectoryBuilder {
         for (FoodItem item : items)
         {
             String data = item.getIngredientsString();
-            Path path = Paths.get(luceneInputDirectoryPath, item.getCode());
+            String fileName = item.getCode() + "_" + (item.getScore() + 15);
+            Path path = Paths.get(luceneInputDirectoryPath, fileName);
             Files.deleteIfExists(path);
             Files.write(path, data.getBytes(), StandardOpenOption.CREATE);
         }

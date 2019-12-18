@@ -17,16 +17,25 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        IngredientsMongoClient mongoClient = new IngredientsMongoClient();
+
+        if (args.length == 1)
+        {
+            searchLuceneAndScore(args[0]);
+        }
+        else
+        {
+            System.out.println("Error: Enter one comma separated ingredients query string");
+        }
 
         //createLuceneInputDirectory();
         //createLuceneIndexDirectory();
-        searchTest(mongoClient);
+        //searchTest();
+
         // runAnalysis(mongoClient);
         // printFoodItem("3493832070384");
     }
 
-    private static void searchTest(IngredientsMongoClient mongoClient)
+    private static void searchTest()
     {
         String s1 = "en:ingredient, en:CRACKED WHOLE WHEAT, en:water, en:POWERSEED MIX, en:wheat-gluten, en:gluten, " +
                 "en:fruit-juice, en:fruit, en:OAT FIBER SEA SALT, en:CULTURED WHOLE WHEAT, en:yeast, en:vinegar, " +
@@ -43,11 +52,11 @@ public class Main {
                 "en:fresh-yeast, en:yeast, en:baker-s-yeast, en:wheat-gluten";
 
 
-        searchLuceneAndScore(mongoClient, s1);
-        searchLuceneAndScore(mongoClient, s2);
-        searchLuceneAndScore(mongoClient, s3);
-        searchLuceneAndScore(mongoClient, s4);
-        searchLuceneAndScore(mongoClient, s5);
+        searchLuceneAndScore(s1);
+        searchLuceneAndScore(s2);
+        searchLuceneAndScore(s3);
+        searchLuceneAndScore(s4);
+        searchLuceneAndScore(s5);
 
         String m1 = "Organic avocado puree (water, organic avocado), nonorganic avocado oil, organic cane sugar, " +
                 "organic tapioca starch, organic cocoa powder, organic vanilla extract, sea salt, " +
@@ -68,13 +77,20 @@ public class Main {
 
         String m7 = "sugar";
 
-        searchLuceneAndScore(mongoClient, m1);
-        searchLuceneAndScore(mongoClient, m2);
-        searchLuceneAndScore(mongoClient, m3);
-        searchLuceneAndScore(mongoClient, m4);
-        searchLuceneAndScore(mongoClient, m5);
-        searchLuceneAndScore(mongoClient, m6);
-        searchLuceneAndScore(mongoClient, m7);
+        String m8 = "brown rice";
+
+        String m9 = "white rice";
+
+        searchLuceneAndScore(m1);
+        searchLuceneAndScore(m2);
+        searchLuceneAndScore(m3);
+        searchLuceneAndScore(m4);
+        searchLuceneAndScore(m5);
+        searchLuceneAndScore(m6);
+        searchLuceneAndScore(m7);
+        searchLuceneAndScore(m8);
+        searchLuceneAndScore(m9);
+
 
 //        // Dave's healthy query
 //        searchLuceneAndScore(mongoClient, "CRACKED WHOLE WHEAT water, POWERSEED MIX, wheat-gluten, gluten, " +
@@ -86,7 +102,7 @@ public class Main {
 //                "wheat-gluten, glucose-fructose-syrup, soya-bean, soya");
     }
 
-    private static void searchLuceneAndScore(IngredientsMongoClient mongoClient, String query){
+    private static void searchLuceneAndScore(String query){
 
         String[] queryArr = query.split(",");
         ArrayList<String> queryList = new ArrayList<String>(Arrays.asList(queryArr));
@@ -95,7 +111,7 @@ public class Main {
 
         String indexPath = "LuceneIndex";
         LuceneSearcher searcher = new LuceneSearcher();
-        ScoringAlgorithm scoringAlgorithm = new ScoringAlgorithm(mongoClient);
+        ScoringAlgorithm scoringAlgorithm = new ScoringAlgorithm();
         try{
             ArrayList<LuceneResult> results = searcher.Search(indexPath, query, 20);
             if (results.size() > 0) {

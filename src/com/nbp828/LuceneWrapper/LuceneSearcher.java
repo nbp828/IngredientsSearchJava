@@ -55,7 +55,8 @@ public class LuceneSearcher {
             String path = doc.get("path");
             String[] dirs = path.split("/");
             String code = dirs[dirs.length - 1];
-            LuceneResult result = new LuceneResult(code, hit.score);
+            String[] tokens = code.split("_");
+            LuceneResult result = new LuceneResult(tokens[0], hit.score, Integer.parseInt(tokens[1]));
             luceneResults.add(result);
         }
         return luceneResults;
