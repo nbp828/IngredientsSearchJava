@@ -18,21 +18,34 @@ public class Main {
 
     public static void main(String[] args) {
 
-        if (args.length == 1)
-        {
-            searchLuceneAndScore(args[0]);
-        }
-        else
-        {
-            System.out.println("Error: Enter one comma separated ingredients query string");
-        }
+        System.out.println("-15 = " + manualScore(-15));
+        System.out.println("-8 = " + manualScore(-8));
+        System.out.println("-6 = " + manualScore(-6));
+        System.out.println("40 = " + manualScore(40));
+
+//        if (args.length == 1)
+//        {
+//            searchLuceneAndScore(args[0]);
+//        }
+//        else
+//        {
+//            System.out.println("Error: Enter one comma separated ingredients query string");
+//        }
 
         //createLuceneInputDirectory();
         //createLuceneIndexDirectory();
-        //searchTest();
+        searchTest();
 
         // runAnalysis(mongoClient);
         // printFoodItem("3493832070384");
+    }
+
+    private static float manualScore(float nutriScore)
+    {
+        float retValue =
+                ((nutriScore - 12.5f) * -1.0f + 27.5f) *
+                        (100.0f/55.0f);
+        return retValue;
     }
 
     private static void searchTest()
@@ -53,6 +66,7 @@ public class Main {
 
 
         searchLuceneAndScore(s1);
+
         searchLuceneAndScore(s2);
         searchLuceneAndScore(s3);
         searchLuceneAndScore(s4);
